@@ -1,0 +1,360 @@
+swagger: '2.0'
+info:
+  version: ''
+  title: Hello.
+  description: ''
+host: 0.0.0.0
+tags:
+  - name: .status
+    description: Please, use this endpoint to check if service is available.
+  - name: authorization
+    description: use this endpoint for - new users registration & JWT token generation.
+  - name: products
+    description: Use this of endpoints to manage product catalog list.
+  - name: users
+    description: Use this of endpoints to manage users list.
+paths:
+  /:
+    get:
+      description: |
+        # Public endpoint. Authentication not required.
+         Returns local date/time now.
+      tags:
+        - .status
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceStatus'
+  /api/auth/sign-up:
+    post:
+      description: |
+        # Public endpoint. Authentication not required.
+        Use this endpoint for registration of new users.
+      tags:
+        - authorization
+      parameters:
+        - in: "body"
+          name: "body"
+          description: |
+            username - min = 3, max = 30
+            password - min = 6, max = 100
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegistration"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/UserRegistrationSuccess'
+
+  /api/auth/sign-in:
+    post:
+      description: |
+        # Public endpoint. Authentication not required.
+        Use this endpoint to generate JWT token.
+      tags:
+        - authorization
+      parameters:
+        - in: "body"
+          name: "body"
+          description: |
+            username - min = 3, max = 30
+            password - min = 6, max = 100
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegistration"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/TokenJwt'
+
+  /api/products:
+    get:
+      description: Use this endpoint to get the list of the available products.
+      tags:
+        - products
+      operationId: List catalogue
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ProductBodyIdName"
+    post:
+      description: 'Use this endpoint to CREATE a new catalogue item.'
+      tags:
+        - products
+      operationId: Create an item
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Object model that needs to be created."
+          required: true
+          schema:
+            $ref: "#/definitions/CreateProduct"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/ProductBody"
+  /api/products/{id}:
+    get:
+      description: 'Use this endpoint to GET information about the specific catalogue item.'
+      tags:
+        - products
+      operationId: Get an item
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: To get the correct response use whole integer values.
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: "#/definitions/ProductBody"
+
+    put:
+      description: 'Use this endpoint to UPDATE information about the specific catalogue item.'
+      tags:
+        - products
+      operationId: Update an item
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: To get the correct response use whole integer values.
+        - in: "body"
+          name: "body"
+          description: "Object or element that needs to be updated."
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateProduct"
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: "#/definitions/ProductBody"
+    delete:
+      description: 'Use this endpoint to DELETE information about the specific catalogue item.'
+      tags:
+        - products
+      operationId: Delete an item
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: To get the correct response use whole integer values.
+      responses:
+        204:
+          description: No content
+
+  /api/users:
+    get:
+      description: 'Use this endpoint to GET information about all existed users.'
+      tags:
+        - users
+      responses:
+        200:
+          description: OK
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/UsersList'
+    post:
+      description: 'Use this endpoint to CREATE a new user.'
+      tags:
+        - users
+      parameters:
+        - in: "body"
+          name: "body"
+          description: |
+            username - min = 3, max = 30
+            password - min = 6, max = 100
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegistration"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/UserRegistrationSuccess'
+
+  /api/users/{id}:
+    get:
+      description: 'Use this endpoint to GET information about specific user.'
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: To get the correct response use whole integer values.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UsersList'
+    delete:
+      description: 'Use this endpoint to DELETE information about specific user.'
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: To get the correct response use whole integer values.
+      responses:
+        204:
+          description: No content
+
+definitions:
+  CreateProduct:
+    title: Products - POST object model
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+        format: double
+      imageUrl:
+        type: string
+    required:
+      - name
+      - description
+      - price
+
+  UpdateProduct:
+    title: Products - PUT object model
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+        format: double
+      imageUrl:
+        type: string
+
+  ProductBody:
+    title: Product object model
+    type: object
+    properties:
+      id:
+        type: number
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+        format: double
+      imageUrl:
+        type: string
+      creationDate:
+        type: string
+        format: date-time
+
+  ProductBodyIdName:
+    title: Product object model (Id, Name)
+    type: object
+    properties:
+      id:
+        type: number
+        format: int64
+      name:
+        type: string
+
+  ServiceStatus:
+    title: Chech if service is alive.
+    type: object
+    properties:
+      today_is:
+        type: string
+
+  UserRegistration:
+    title: User registration model.
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  UserRegistrationSuccess:
+    title: User registration model (success operation).
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+
+  UsersList:
+    title: List of available users.
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      password:
+        type: string
+      roles:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+      creationDate:
+        type: string
+
+  TokenJwt:
+    title: TOKEN
+    type: object
+    properties:
+      accessToken:
+        type: string
+      tokenType:
+        type: string
+
+securityDefinitions:
+  jwt_auth:
+    type: apiKey
+    description: 'JWT Auth Token. Usage: Bearer <jwt_token>'
+    name: Authorization
+    in: header
+
+security:
+  - jwt_auth: []
