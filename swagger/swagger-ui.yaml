@@ -3,7 +3,7 @@ info:
   version: ''
   title: Hello.
   description: ''
-host: 0.0.0.0
+host: 35.246.66.162
 tags:
   - name: .status
     description: Please, use this endpoint to check if service is available.
