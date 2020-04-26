@@ -23,6 +23,7 @@ public class ProductsController {
     private ProductService productService;
 
     @GetMapping
+    @ResponseStatus(value = HttpStatus.OK)
     @JsonView(Views.IdName.class)
     public Iterable<Product> list() {
         return productService.getAllItems();
@@ -52,7 +53,7 @@ public class ProductsController {
     }
     
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable("id") Long id) throws EntityNotFoundException {
         productService.delete(id);
     }
