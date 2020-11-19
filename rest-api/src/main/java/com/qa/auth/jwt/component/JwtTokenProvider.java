@@ -6,12 +6,12 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.qa.auth.jwt.utils.SecurityConstants.JWT_SECRET;
@@ -26,14 +26,14 @@ public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication) {
 
-        var userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        var roles = userPrincipal.getAuthorities()
+        List<String> roles = userPrincipal.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        var expiryDate = new Date(System.currentTimeMillis() + 108_000000);
+        Date expiryDate = new Date(System.currentTimeMillis() + 108_000000);
 
         return Jwts.builder()
                 .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
 
     public Long getUserIdFromJWT(String token) {
 
-        var claims = Jwts.parser()
+        Claims claims = Jwts.parser()
                 .setSigningKey(signingKey)
                 .parseClaimsJws(token)
                 .getBody();

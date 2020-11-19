@@ -2,8 +2,9 @@ swagger: '2.0'
 info:
   version: '1.0'
   title: Hello
+
   description: 'Spring Shop.'
-host: 35.246.66.162
+host: 209.97.129.219
 tags:
   - name: .status
     description: Please, use this endpoint to check if service is available.

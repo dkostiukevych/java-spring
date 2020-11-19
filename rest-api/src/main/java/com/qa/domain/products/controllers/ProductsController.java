@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/products")
+@RequestMapping(name = "Products controller",value = "api/products")
 @SuppressWarnings("JavadocType")
 public class ProductsController {
 
@@ -29,7 +29,7 @@ public class ProductsController {
         return productService.getAllItems();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(name = "GET one", value = "/{id}")
     @JsonView(Views.FullMessage.class)
     public Optional<Product> getOne(@PathVariable("id") Long id) throws EntityNotFoundException {
        return productService.getOne(id);
@@ -43,7 +43,7 @@ public class ProductsController {
         return productService.createProduct(product);
     }
     
-    @PutMapping(value = "/{id}")
+    @PutMapping(name = "PUT one",value = "/{id}")
     @JsonView(Views.FullMessage.class)
     public Product update(@PathVariable("id") Long id, 
                           Product productFromDb,
@@ -52,7 +52,7 @@ public class ProductsController {
         return productService.updateProduct(id, productFromDb);
     }
     
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(name = "DELETE one",value = "/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) throws EntityNotFoundException {
         productService.delete(id);

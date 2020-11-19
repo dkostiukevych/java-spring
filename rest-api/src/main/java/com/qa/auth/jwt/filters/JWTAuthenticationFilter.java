@@ -2,10 +2,10 @@ package com.qa.auth.jwt.filters;
 
 import com.qa.auth.jwt.component.JwtTokenProvider;
 import com.qa.domain.users.service.MyUserDetailsService;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.qa.auth.jwt.utils.SecurityConstants.*;
+import static com.qa.auth.jwt.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static com.qa.auth.jwt.utils.SecurityConstants.TOKEN_PREFIX;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
@@ -33,9 +34,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-                
-                var userDetails = myUserDetailsService.loadUserById(userId);
-                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+                UserDetails userDetails = myUserDetailsService.loadUserById(userId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails
                         (new WebAuthenticationDetailsSource()
                                 .buildDetails(request));
