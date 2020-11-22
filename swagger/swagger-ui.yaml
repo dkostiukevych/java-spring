@@ -4,7 +4,7 @@ info:
   title: Hello
 
   description: 'Spring Shop.'
-host: 209.97.129.219
+host: 104.248.132.8
 tags:
   - name: .status
     description: Please, use this endpoint to check if service is available.
