@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <div style="display: block;">
+            <div style="display: inline-block;">
+                <h3>Welcome!</h3>
+                <p>Click <a href="/products">here</a> to go to the products page.</p>
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+            </div>
+            <div style="display: inline-block;">
+                <form action="/logout" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                    <input type="submit" value="Sing Out">
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+</body>
+</html>

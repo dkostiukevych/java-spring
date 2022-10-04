@@ -1,0 +1,57 @@
+ext {
+    jjwt_version = "0.10.6"
+}
+
+bootJar {
+    baseName = 'qa-spring-boot'
+    version =  '0.0.2'
+}
+
+dependencies {
+
+    implementation(
+            "org.springframework.boot:spring-boot-starter-web",
+            "org.springframework.boot:spring-boot-starter-data-jpa",
+            "org.springframework.boot:spring-boot-starter-data-jdbc",
+            "org.springframework.boot:spring-boot-starter-thymeleaf",
+            "org.springframework.boot:spring-boot-starter-validation",
+            "org.springframework.boot:spring-boot-starter-security",
+
+            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
+            
+            "org.apache.commons:commons-lang3",
+            
+            "mysql:mysql-connector-java",
+            
+            "io.jsonwebtoken:jjwt-api:${jjwt_version}",
+            "io.jsonwebtoken:jjwt-impl:${jjwt_version}",
+            "io.jsonwebtoken:jjwt-jackson:${jjwt_version}")
+
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+
+
+    testImplementation(
+            "org.springframework.boot:spring-boot-starter-test",
+            "org.junit.jupiter:junit-jupiter-api",
+            "org.junit.jupiter:junit-jupiter-engine")
+    
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// Task for pre-downloading all dependencies
+task downloadDependencies {
+    description "Pre-downloads *most* dependencies"
+    doLast {
+        configurations.getAsMap().each { name, config ->
+            println "Retrieving dependencies for $name"
+            try {
+                config.files
+            } catch (e) {
+                project.logger.info e.message // some cannot be resolved, silentlyish skip them
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+.gradle
+.idea
+out/
+HELP.md
+
+rest-api/build/
+rest-api/out/
+rest-api/.gradles/
